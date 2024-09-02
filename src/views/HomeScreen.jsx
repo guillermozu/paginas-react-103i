@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { getProducts } from "../helpers/ApiFetch";
 import CardProductApp from "../components/CardProductApp";
+
 const HomeScreen = () => {
   const [productos, setProductos] = useState([]);
+
   useEffect(() => {
     traerProductos();
   }, []);

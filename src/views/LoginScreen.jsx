@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const LoginScreen = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const navigate = useNavigate();
 
   const user = {
@@ -15,31 +22,33 @@ const LoginScreen = () => {
     role: "admin",
   };
 
-  const [formValue, setFormValue] = useState({
-    correo: "",
-    pass: "",
-  });
+  // const [formValue, setFormValue] = useState({
+  //   correo: "admin@admin.com",
+  //   pass: "",
+  // });
+  // const [correo, setCorreo] = useState("");
+  // const [pass, setPass] = useState("");
 
-  const handleChange = (e) => {
-    setFormValue({ ...formValue, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   // console.log(e.target.name);
 
-  const loigIn = (e) => {
-    e.preventDefault();
-    const { correo, pass } = formValue;
+  //   setFormValue({ ...formValue, [e.target.name]: e.target.value });
+  // };
+
+  const logIn = (data, e) => {
+    // e.preventDefault();
+
+    const { correo, pass } = data;
 
     if (correo === user.correo && pass === user.pass) {
       localStorage.setItem("auth", JSON.stringify(user.role));
       navigate("/");
     } else if (correo === admin.correo && pass === admin.pass) {
       localStorage.setItem("auth", JSON.stringify(admin.role));
-      navigate("/");
+      navigate("/admin");
     } else {
       alert("Correo o contraseña incorrectos");
-      setFormValue({
-        correo: "",
-        pass: "",
-      });
+
       e.target[0].focus();
     }
   };
@@ -52,27 +61,51 @@ const LoginScreen = () => {
             <div className="card-body">
               <h5 className="card-title">Inicio de sesión</h5>
 
-              <form onSubmit={loigIn}>
+              <form onSubmit={handleSubmit(logIn)}>
                 <div className="mb-3">
                   <label className="form-label">Correo</label>
                   <input
                     type="email"
-                    className="form-control"
+                    className={
+                      errors.correo?.type === "required"
+                        ? "form-control bg-danger"
+                        : "form-control"
+                    }
                     placeholder="name@example.com"
-                    value={formValue.correo}
-                    onChange={handleChange}
-                    name="correo"
+                    {...register("correo", {
+                      required: true,
+                      pattern:
+                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    })}
                   />
+                  {errors.correo?.type === "required" && (
+                    <p className="text-danger">Correo obligatorio</p>
+                  )}
+                  {errors.correo?.type === "pattern" && (
+                    <p className="text-danger">
+                      No es un formato válido de correo
+                    </p>
+                  )}
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Contraseña</label>
                   <input
-                    name="pass"
+                    {...register("pass", {
+                      required: true,
+                      pattern: /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,16}$/,
+                    })}
                     type="password"
                     className="form-control"
-                    value={formValue.pass}
-                    onChange={handleChange}
                   />
+                  {errors.pass?.type === "required" && (
+                    <p className="text-danger">Contraseña obligatoria</p>
+                  )}
+                  {errors.pass?.type === "pattern" && (
+                    <p className="text-danger">
+                      Debe tener solo minúsculas y números. Mínimo 8 caracteres
+                      máximo 16 caracteres.
+                    </p>
+                  )}
                 </div>
                 <div className="d-flex justify-content-end">
                   <button className="btn btn-success">Iniciar</button>
