@@ -1,0 +1,5 @@
+.input-invalid,
+.input-invalid:hover,
+.input-invalid:focus {
+  border: 2px solid red;
+}
