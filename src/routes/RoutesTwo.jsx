@@ -14,7 +14,7 @@ const RoutesTwo = () => {
       <Routes>
         <Route path="/" element={<HomeScreen />} />
         <Route path="/about" element={<AboutScreen />} />
-        {/* Ruta de producto por id  */}
+        <Route path="/product/:id" element={<ProductScreen />} />
         <Route
           path="/admin"
           element={

@@ -74,8 +74,6 @@ const LoginScreen = () => {
                     placeholder="name@example.com"
                     {...register("correo", {
                       required: true,
-                      pattern:
-                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                     })}
                   />
                   {errors.correo?.type === "required" && (
